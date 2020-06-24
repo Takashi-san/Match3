@@ -164,13 +164,13 @@ public class GridBoard : MonoBehaviour {
 					// Clear gem.
 					Destroy(_grid[i, gem.y].gameObject);
 					_grid[i, gem.y] = null;
-					MoveColumn(i);
+					UpdateColumn(i);
 				}
 				for (int i = gem.x - 1; i >= gem.x - matchHoriNeg; i--) {
 					// Clear gem.
 					Destroy(_grid[i, gem.y].gameObject);
 					_grid[i, gem.y] = null;
-					MoveColumn(i);
+					UpdateColumn(i);
 				}
 			}
 
@@ -190,7 +190,7 @@ public class GridBoard : MonoBehaviour {
 			// Clear target gem.
 			Destroy(_grid[gem.x, gem.y].gameObject);
 			_grid[gem.x, gem.y] = null;
-			MoveColumn(gem.x);
+			UpdateColumn(gem.x);
 
 			return true;
 		}
@@ -199,33 +199,44 @@ public class GridBoard : MonoBehaviour {
 		}
 	}
 
-	void MoveColumn(int column) {
-		int noNull = 0;
+	void UpdateColumn(int column) {
+		int isNull = 0;
+		int notNull = 0;
 
 		// Search for null.
-		for (int i = 0; i < _gridSize.y; i++) {
-			if (_grid[column, i] == null) {
+		for (isNull = 0; isNull < _gridSize.y; isNull++) {
+			if (_grid[column, isNull] == null) {
+
 				// Search for not null to replace.
-				if (noNull < i) {
-					noNull = i;
+				if (notNull <= isNull) {
+					notNull = isNull + 1;
 				}
-				for (int j = noNull + 1; j < _gridSize.y; j++) {
-					noNull = j;
-					if (_grid[column, j] != null) {
+				for (; notNull < _gridSize.y; notNull++) {
+					if (_grid[column, notNull] != null) {
 						// Change position.
-						_grid[column, j].transform.position = new Vector2(column, i);
+						_grid[column, notNull].transform.position = new Vector2(column, isNull);
 						// Change index.
-						_grid[column, i] = _grid[column, j];
-						_grid[column, j] = null;
+						_grid[column, isNull] = _grid[column, notNull];
+						_grid[column, notNull] = null;
+
+						notNull++;
+						if (notNull >= _gridSize.y) {
+							isNull++;
+						}
 						break;
 					}
 				}
 
-				// No more elements on the column to move.
-				if (noNull + 1 == _gridSize.y) {
+				// No more elements on the column that can be moved.
+				if (notNull >= _gridSize.y) {
 					break;
 				}
 			}
+		}
+
+		// Replenish the column.
+		for (; isNull < _gridSize.y; isNull++) {
+			_grid[column, isNull] = Instantiate(_gems[Random.Range(0, _gems.Length)], new Vector2(column, isNull), Quaternion.identity).GetComponent<Gem>();
 		}
 	}
 }
