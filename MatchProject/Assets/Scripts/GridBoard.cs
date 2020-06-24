@@ -66,6 +66,14 @@ public class GridBoard : MonoBehaviour {
 						break;
 				}
 
+				// Check if one of the gems is null.
+				if (_grid[gemA.x, gemA.y] == null) {
+					return;
+				}
+				if (_grid[gemB.x, gemB.y] == null) {
+					return;
+				}
+
 				DoMove(gemA, gemB);
 
 				CheckMatch(gemA);
