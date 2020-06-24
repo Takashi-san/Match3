@@ -97,19 +97,25 @@ public class GridBoard : MonoBehaviour {
 
 		// Check horizontal match.
 		for (int i = gem.x + 1; i < _gridSize.x; i++) {
-			if (_grid[i, gem.y].Id == gemId) {
-				matchHoriPos++;
+			if (_grid[i, gem.y] == null) {
+				break;
+			}
+			else if (_grid[i, gem.y].Id != gemId) {
+				break;
 			}
 			else {
-				break;
+				matchHoriPos++;
 			}
 		}
 		for (int i = gem.x - 1; i >= 0; i--) {
-			if (_grid[i, gem.y].Id == gemId) {
-				matchHoriNeg++;
+			if (_grid[i, gem.y] == null) {
+				break;
+			}
+			else if (_grid[i, gem.y].Id != gemId) {
+				break;
 			}
 			else {
-				break;
+				matchHoriNeg++;
 			}
 		}
 		if (matchHoriPos + matchHoriNeg >= 2) {
@@ -118,19 +124,25 @@ public class GridBoard : MonoBehaviour {
 
 		// Check vertical match.
 		for (int i = gem.y + 1; i < _gridSize.y; i++) {
-			if (_grid[gem.x, i].Id == gemId) {
-				matchVertPos++;
+			if (_grid[gem.x, i] == null) {
+				break;
+			}
+			else if (_grid[gem.x, i].Id != gemId) {
+				break;
 			}
 			else {
-				break;
+				matchVertPos++;
 			}
 		}
 		for (int i = gem.y - 1; i >= 0; i--) {
-			if (_grid[gem.x, i].Id == gemId) {
-				matchVertNeg++;
+			if (_grid[gem.x, i] == null) {
+				break;
+			}
+			else if (_grid[gem.x, i].Id != gemId) {
+				break;
 			}
 			else {
-				break;
+				matchVertNeg++;
 			}
 		}
 		if (matchVertPos + matchVertNeg >= 2) {
@@ -182,11 +194,9 @@ public class GridBoard : MonoBehaviour {
 	void MoveColumn(int column) {
 		int noNull = 0;
 
-		Debug.Log("Called");
 		// Search for null.
 		for (int i = 0; i < _gridSize.y; i++) {
 			if (_grid[column, i] == null) {
-				Debug.Log("Found null = " + i);
 				// Search for not null to replace.
 				if (noNull < i) {
 					noNull = i;
@@ -194,7 +204,6 @@ public class GridBoard : MonoBehaviour {
 				for (int j = noNull + 1; j < _gridSize.y; j++) {
 					noNull = j;
 					if (_grid[column, j] != null) {
-						Debug.Log("Found not null = " + j);
 						// Change position.
 						_grid[column, j].transform.position = new Vector2(column, i);
 						// Change index.
@@ -206,7 +215,6 @@ public class GridBoard : MonoBehaviour {
 
 				// No more elements on the column to move.
 				if (noNull + 1 == _gridSize.y) {
-					Debug.Log("column end");
 					break;
 				}
 			}
