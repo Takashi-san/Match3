@@ -216,7 +216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7bd27ed2d4a87845a48d0dfbb2c0f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _size: {x: 4, y: 6}
+  _size: {x: 4, y: 4}
   _gems:
   - {fileID: 2032365170382298201, guid: ebfa2a0877d396046a5b75b9756859d1, type: 3}
   - {fileID: 1283858449375562544, guid: 833660234dc42b14d8d47e6a8a4e1a98, type: 3}
