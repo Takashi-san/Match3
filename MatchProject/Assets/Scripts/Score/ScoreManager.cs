@@ -16,8 +16,8 @@ public class ScoreManager : MonoBehaviour {
 			_instance = this;
 		}
 		else {
-			Debug.LogWarning("Duplicate of ScoreManager, destroying: " + gameObject.name);
-			Destroy(gameObject);
+			Debug.LogWarning("Duplicate of ScoreManager in: " + gameObject.name);
+			Destroy(this);
 		}
 	}
 

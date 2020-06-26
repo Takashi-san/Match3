@@ -21,8 +21,8 @@ public class PlayerInput : MonoBehaviour {
 			_instance = this;
 		}
 		else {
-			Debug.LogWarning("Duplicate of PlayerInput, destroying: " + gameObject.name);
-			Destroy(gameObject);
+			Debug.LogWarning("Duplicate of PlayerInput in: " + gameObject.name);
+			Destroy(this);
 		}
 	}
 

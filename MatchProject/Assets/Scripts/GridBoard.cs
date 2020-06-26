@@ -10,11 +10,12 @@ public class GridBoard : MonoBehaviour {
 
 	Gem[,] _grid;
 	GemSpawner _spawner;
+	bool _inMove = false;
 
 	void Start() {
 		_spawner = FindObjectOfType<GemSpawner>();
-		PlayerInput.Instance.swipe += CheckMove;
 		SetupGrid();
+		PlayerInput.Instance.swipe += CheckMove;
 	}
 
 	// Important thing to take note is that the gem's index on the grid are the same as their position in world space.
@@ -29,6 +30,12 @@ public class GridBoard : MonoBehaviour {
 	}
 
 	void CheckMove(Vector2 swipePosition, Enums.Direction direction) {
+		// Check if it is already in the middle of another player move.
+		if (_inMove) {
+			return;
+		}
+		_inMove = true;
+
 		// Check if input was on the board.
 		swipePosition += new Vector2(0.5f, 0.5f);
 		if ((swipePosition.x >= 0) && (swipePosition.y >= 0)) {
@@ -75,19 +82,35 @@ public class GridBoard : MonoBehaviour {
 					return;
 				}
 
-				Swap(gemA, gemB);
-
-				// Check if valid movement.
-				CheckMatchGem(gemA);
-				CheckMatchGem(gemB);
-				UpdateGrid();
-
-				// Successfull movement.
-				while (CheckMatchGrid()) {
-					UpdateGrid();
-				}
+				StartCoroutine(CheckMoveValidity(gemA, gemB));
 			}
 		}
+	}
+
+	IEnumerator CheckMoveValidity(Vector2Int gemA, Vector2Int gemB) {
+		Swap(gemA, gemB);
+		while (GemMoveManager.Instance.HasMovement) {
+			yield return null;
+		}
+
+		// Check if valid movement.
+		CheckMatchGem(gemA);
+		CheckMatchGem(gemB);
+		UpdateGrid();
+		while (GemMoveManager.Instance.HasMovement) {
+			yield return null;
+		}
+
+		// Successfull movement.
+		while (CheckMatchGrid()) {
+			UpdateGrid();
+			while (GemMoveManager.Instance.HasMovement) {
+				yield return null;
+			}
+		}
+
+		// Finish player move.
+		_inMove = false;
 	}
 
 	void Swap(Vector2Int gemA, Vector2Int gemB) {

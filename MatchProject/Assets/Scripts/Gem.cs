@@ -17,6 +17,7 @@ public class Gem : MonoBehaviour {
 			if (_timer > _moveDuration) {
 				_timer = _moveDuration;
 				_doMove = false;
+				GemMoveManager.Instance.StoppedMoving(this);
 			}
 
 			float t = _timer / _moveDuration;
@@ -33,5 +34,11 @@ public class Gem : MonoBehaviour {
 		_endPosition = position;
 		_timer = 0;
 		_doMove = true;
+		GemMoveManager.Instance.StartedMoving(this);
+	}
+
+	void OnDisable() {
+		_doMove = false;
+		GemMoveManager.Instance.StoppedMoving(this);
 	}
 }

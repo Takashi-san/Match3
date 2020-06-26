@@ -777,6 +777,7 @@ GameObject:
   - component: {fileID: 2115993269}
   - component: {fileID: 2115993268}
   - component: {fileID: 2115993270}
+  - component: {fileID: 2115993272}
   m_Layer: 0
   m_Name: Score Manager
   m_TagString: Untagged
@@ -822,13 +823,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c9056f2223e3c84090c4b679653aacc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  list:
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  gems:
-    _keys: 
-    _values: []
+--- !u!114 &2115993272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115993267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33f7202c71741184095dd9b369d3dd76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
