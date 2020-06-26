@@ -7,17 +7,14 @@ public class PlayerInput : MonoBehaviour {
 	public Action<Vector2, Enums.Direction> swipe;
 
 	[SerializeField] [Min(0)] float _swipeDeadzoneRadius = 0;
+	[SerializeField] bool _mouse = false;
 
 	Vector2 _swipePosition;
 	bool _swipeValid = false;
 
 
 	static PlayerInput _instance;
-	public static PlayerInput Instance {
-		get {
-			return _instance;
-		}
-	}
+	public static PlayerInput Instance => _instance;
 
 	void Awake() {
 		if (_instance == null) {
@@ -30,8 +27,13 @@ public class PlayerInput : MonoBehaviour {
 	}
 
 	void Update() {
-		if (Input.touchCount > 0) {
-			CheckSwipe();
+		if (_mouse) {
+			CheckSwipeMouse();
+		}
+		else {
+			if (Input.touchCount > 0) {
+				CheckSwipe();
+			}
 		}
 	}
 
@@ -43,6 +45,45 @@ public class PlayerInput : MonoBehaviour {
 		}
 		else if (_swipeValid && ((touch.phase == TouchPhase.Ended) || (touch.phase == TouchPhase.Canceled))) {
 			Vector2 endPosition = Camera.main.ScreenToWorldPoint(touch.position);
+			endPosition = endPosition - _swipePosition;
+
+			if (endPosition.magnitude >= _swipeDeadzoneRadius) {
+				float angle = Mathf.Atan2(endPosition.y, endPosition.x);
+				angle = Mathf.Rad2Deg * angle;
+
+				if (angle <= 45 && angle > -45) {
+					if (swipe != null) {
+						swipe(_swipePosition, Enums.Direction.Right);
+					}
+				}
+				else if (angle <= 135 && angle > 45) {
+					if (swipe != null) {
+						swipe(_swipePosition, Enums.Direction.Up);
+					}
+				}
+				else if (angle <= -135 || angle > 135) {
+					if (swipe != null) {
+						swipe(_swipePosition, Enums.Direction.Left);
+					}
+				}
+				else if (angle <= -45 && angle > -135) {
+					if (swipe != null) {
+						swipe(_swipePosition, Enums.Direction.Down);
+					}
+				}
+			}
+
+			_swipeValid = false;
+		}
+	}
+
+	void CheckSwipeMouse() {
+		if (Input.GetMouseButtonDown(0)) {
+			_swipePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			_swipeValid = true;
+		}
+		else if (_swipeValid && Input.GetMouseButtonUp(0)) {
+			Vector2 endPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			endPosition = endPosition - _swipePosition;
 
 			if (endPosition.magnitude >= _swipeDeadzoneRadius) {
