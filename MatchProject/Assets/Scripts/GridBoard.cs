@@ -18,6 +18,8 @@ public class GridBoard : MonoBehaviour {
 		PlayerInput.Instance.swipe += CheckMove;
 	}
 
+	// Important thing to take note is that the gem's index on the grid are the same as their position in world space.
+	// This detail is important in multiple places in the code and how the scene is being setup in the game.
 	void SetupGrid() {
 		_grid = new Gem[_gridSize.x, _gridSize.y];
 		for (int x = 0; x < _gridSize.x; x++) {
@@ -74,15 +76,22 @@ public class GridBoard : MonoBehaviour {
 					return;
 				}
 
-				DoMove(gemA, gemB);
+				Swap(gemA, gemB);
 
-				CheckMatch(gemA);
-				CheckMatch(gemB);
+				// Check if valid movement.
+				CheckMatchGem(gemA);
+				CheckMatchGem(gemB);
+				UpdateGrid();
+
+				// Successfull movement.
+				while (CheckMatchGrid()) {
+					UpdateGrid();
+				}
 			}
 		}
 	}
 
-	void DoMove(Vector2Int gemA, Vector2Int gemB) {
+	void Swap(Vector2Int gemA, Vector2Int gemB) {
 		Gem tmp = _grid[gemB.x, gemB.y];
 
 		// Change position.
@@ -94,12 +103,16 @@ public class GridBoard : MonoBehaviour {
 		_grid[gemA.x, gemA.y] = tmp;
 	}
 
-	bool CheckMatch(Vector2Int gem) {
+	bool CheckMatchGem(Vector2Int gem) {
+		if (_grid[gem.x, gem.y] == null) {
+			return false;
+		}
 		Enums.GemId gemId = _grid[gem.x, gem.y].Id;
 		bool hasHoriMatch = false;
+		bool hasVertMatch = false;
+		// number of matching gems in positive/negative direction.
 		int matchHoriPos = 0;
 		int matchHoriNeg = 0;
-		bool hasVertMatch = false;
 		int matchVertPos = 0;
 		int matchVertNeg = 0;
 
@@ -164,13 +177,11 @@ public class GridBoard : MonoBehaviour {
 					// Clear gem.
 					Destroy(_grid[i, gem.y].gameObject);
 					_grid[i, gem.y] = null;
-					UpdateColumn(i);
 				}
 				for (int i = gem.x - 1; i >= gem.x - matchHoriNeg; i--) {
 					// Clear gem.
 					Destroy(_grid[i, gem.y].gameObject);
 					_grid[i, gem.y] = null;
-					UpdateColumn(i);
 				}
 			}
 
@@ -190,13 +201,28 @@ public class GridBoard : MonoBehaviour {
 			// Clear target gem.
 			Destroy(_grid[gem.x, gem.y].gameObject);
 			_grid[gem.x, gem.y] = null;
-			UpdateColumn(gem.x);
+
+			GiveMatchPoints(matchHoriNeg + matchHoriPos, matchVertNeg + matchVertPos);
 
 			return true;
 		}
 		else {
 			return false;
 		}
+	}
+
+	bool CheckMatchGrid() {
+		bool hadMatches = false;
+
+		for (int x = 0; x < _gridSize.x; x++) {
+			for (int y = 0; y < _gridSize.y; y++) {
+				if (CheckMatchGem(new Vector2Int(x, y))) {
+					hadMatches = true;
+				}
+			}
+		}
+
+		return hadMatches;
 	}
 
 	void UpdateColumn(int column) {
@@ -237,6 +263,27 @@ public class GridBoard : MonoBehaviour {
 		// Replenish the column.
 		for (; isNull < _gridSize.y; isNull++) {
 			_grid[column, isNull] = Instantiate(_gems[Random.Range(0, _gems.Length)], new Vector2(column, isNull), Quaternion.identity).GetComponent<Gem>();
+		}
+	}
+
+	void UpdateGrid() {
+		for (int x = 0; x < _gridSize.x; x++) {
+			UpdateColumn(x);
+		}
+	}
+
+	void GiveMatchPoints(int horiMatch, int vertMatch) {
+		if ((horiMatch > 1) && (vertMatch > 1)) {
+			// crux.
+			ScoreManager.Instance.AddScore((horiMatch + vertMatch - 3) * 225);
+		}
+		else if (horiMatch > 1) {
+			// only horizontal match.
+			ScoreManager.Instance.AddScore((horiMatch - 1) * 75);
+		}
+		else if (vertMatch > 1) {
+			// only vertical match.
+			ScoreManager.Instance.AddScore((vertMatch - 1) * 75);
 		}
 	}
 }
