@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class SetupCamera : MonoBehaviour {
 	Vector2Int _gridSize;
-	void Start() {
+
+	void Awake() {
 		_gridSize = FindObjectOfType<GridBoard>().GridSize;
 		Setup();
 	}

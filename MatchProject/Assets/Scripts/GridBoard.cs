@@ -9,13 +9,12 @@ public class GridBoard : MonoBehaviour {
 	public Vector2Int GridSize => _gridSize;
 
 	Gem[,] _grid;
-
-	void Awake() {
-		SetupGrid();
-	}
+	GemSpawner _spawner;
 
 	void Start() {
+		_spawner = FindObjectOfType<GemSpawner>();
 		PlayerInput.Instance.swipe += CheckMove;
+		SetupGrid();
 	}
 
 	// Important thing to take note is that the gem's index on the grid are the same as their position in world space.
@@ -24,7 +23,7 @@ public class GridBoard : MonoBehaviour {
 		_grid = new Gem[_gridSize.x, _gridSize.y];
 		for (int x = 0; x < _gridSize.x; x++) {
 			for (int y = 0; y < _gridSize.y; y++) {
-				_grid[x, y] = Instantiate(_gems[Random.Range(0, _gems.Length)], new Vector2(x, y), Quaternion.identity).GetComponent<Gem>();
+				_grid[x, y] = _spawner.Spawn(_gems[Random.Range(0, _gems.Length)], new Vector2(x, y));
 			}
 		}
 	}
@@ -262,7 +261,7 @@ public class GridBoard : MonoBehaviour {
 
 		// Replenish the column.
 		for (; isNull < _gridSize.y; isNull++) {
-			_grid[column, isNull] = Instantiate(_gems[Random.Range(0, _gems.Length)], new Vector2(column, isNull), Quaternion.identity).GetComponent<Gem>();
+			_grid[column, isNull] = _spawner.Spawn(_gems[Random.Range(0, _gems.Length)], new Vector2(column, isNull));
 		}
 	}
 
@@ -274,7 +273,7 @@ public class GridBoard : MonoBehaviour {
 
 	void GiveMatchPoints(int horiMatch, int vertMatch) {
 		if ((horiMatch > 1) && (vertMatch > 1)) {
-			// crux.
+			// cross.
 			ScoreManager.Instance.AddScore((horiMatch + vertMatch - 3) * 225);
 		}
 		else if (horiMatch > 1) {
