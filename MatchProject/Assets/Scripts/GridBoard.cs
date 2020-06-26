@@ -95,8 +95,8 @@ public class GridBoard : MonoBehaviour {
 		Gem tmp = _grid[gemB.x, gemB.y];
 
 		// Change position.
-		_grid[gemA.x, gemA.y].transform.position = new Vector2(gemB.x, gemB.y);
-		_grid[gemB.x, gemB.y].transform.position = new Vector2(gemA.x, gemA.y);
+		_grid[gemA.x, gemA.y].Move(new Vector2(gemB.x, gemB.y));
+		_grid[gemB.x, gemB.y].Move(new Vector2(gemA.x, gemA.y));
 
 		// Change index.
 		_grid[gemB.x, gemB.y] = _grid[gemA.x, gemA.y];
@@ -240,7 +240,7 @@ public class GridBoard : MonoBehaviour {
 				for (; notNull < _gridSize.y; notNull++) {
 					if (_grid[column, notNull] != null) {
 						// Change position.
-						_grid[column, notNull].transform.position = new Vector2(column, isNull);
+						_grid[column, notNull].Move(new Vector2(column, isNull));
 						// Change index.
 						_grid[column, isNull] = _grid[column, notNull];
 						_grid[column, notNull] = null;

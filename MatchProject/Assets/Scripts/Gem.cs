@@ -4,5 +4,34 @@ using UnityEngine;
 
 public class Gem : MonoBehaviour {
 	[SerializeField] Enums.GemId _id = Enums.GemId.MILK;
+	[SerializeField] [Min(0.001f)] float _moveDuration = 0.001f;
 	public Enums.GemId Id => _id;
+	float _timer = 0;
+	bool _doMove = false;
+	Vector2 _startPosition;
+	Vector2 _endPosition;
+
+	void Update() {
+		if (_doMove) {
+			_timer += Time.deltaTime;
+			if (_timer > _moveDuration) {
+				_timer = _moveDuration;
+				_doMove = false;
+			}
+
+			float t = _timer / _moveDuration;
+			t = 1 - (1 - t) * (1 - t) * (1 - t); // Smooth Stop 3.
+			Vector3 position = new Vector3(Mathf.Lerp(_startPosition.x, _endPosition.x, t),
+										   Mathf.Lerp(_startPosition.y, _endPosition.y, t),
+										   transform.position.z);
+			transform.position = position;
+		}
+	}
+
+	public void Move(Vector2 position) {
+		_startPosition = transform.position;
+		_endPosition = position;
+		_timer = 0;
+		_doMove = true;
+	}
 }
