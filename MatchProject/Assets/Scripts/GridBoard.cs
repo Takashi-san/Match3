@@ -29,6 +29,24 @@ public class GridBoard : MonoBehaviour {
 		}
 	}
 
+	void ShuffleGrid() {
+		List<Gem> tmp = new List<Gem>();
+		for (int x = 0; x < _gridSize.x; x++) {
+			for (int y = 0; y < _gridSize.y; y++) {
+				tmp.Add(_grid[x, y]);
+			}
+		}
+
+		for (int x = 0; x < _gridSize.x; x++) {
+			for (int y = 0; y < _gridSize.y; y++) {
+				int rand = Random.Range(0, tmp.Count);
+				_grid[x, y] = tmp[rand];
+				tmp[rand].Move(new Vector2(x, y));
+				tmp.RemoveAt(rand);
+			}
+		}
+	}
+
 	#region Player Move
 	void CheckMove(Vector2 swipePosition, Enums.Direction direction) {
 		// Check if it is already in the middle of another player move.
@@ -110,7 +128,18 @@ public class GridBoard : MonoBehaviour {
 			}
 		}
 
-		CheckDeadlockGrid();
+		while (CheckDeadlockGrid()) {
+			ShuffleGrid();
+			while (GemMoveManager.Instance.HasMovement) {
+				yield return null;
+			}
+			while (CheckMatchGrid()) {
+				UpdateGrid();
+				while (GemMoveManager.Instance.HasMovement) {
+					yield return null;
+				}
+			}
+		}
 
 		// Finish player move.
 		_inMove = false;
@@ -317,7 +346,7 @@ public class GridBoard : MonoBehaviour {
 	}
 	#endregion
 
-	#region  Deadlock Check
+	#region Deadlock Check
 	bool CheckDeadlockGrid() {
 		for (int x = 0; x < _gridSize.x; x++) {
 			for (int y = 0; y < _gridSize.y; y++) {
@@ -327,7 +356,6 @@ public class GridBoard : MonoBehaviour {
 			}
 		}
 
-		Debug.Log("deadlock!!!");
 		return true;
 	}
 
