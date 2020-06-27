@@ -29,6 +29,7 @@ public class GridBoard : MonoBehaviour {
 		}
 	}
 
+	#region Player Move
 	void CheckMove(Vector2 swipePosition, Enums.Direction direction) {
 		// Check if it is already in the middle of another player move.
 		if (_inMove) {
@@ -109,6 +110,8 @@ public class GridBoard : MonoBehaviour {
 			}
 		}
 
+		CheckDeadlockGrid();
+
 		// Finish player move.
 		_inMove = false;
 	}
@@ -124,7 +127,9 @@ public class GridBoard : MonoBehaviour {
 		_grid[gemB.x, gemB.y] = _grid[gemA.x, gemA.y];
 		_grid[gemA.x, gemA.y] = tmp;
 	}
+	#endregion
 
+	#region Match Check
 	bool CheckMatchGem(Vector2Int gem) {
 		if (_grid[gem.x, gem.y] == null) {
 			return false;
@@ -247,6 +252,23 @@ public class GridBoard : MonoBehaviour {
 		return hadMatches;
 	}
 
+	void GiveMatchPoints(int horiMatch, int vertMatch) {
+		if ((horiMatch > 1) && (vertMatch > 1)) {
+			// cross.
+			ScoreManager.Instance.AddScore((horiMatch + vertMatch - 3) * 225);
+		}
+		else if (horiMatch > 1) {
+			// only horizontal match.
+			ScoreManager.Instance.AddScore((horiMatch - 1) * 75);
+		}
+		else if (vertMatch > 1) {
+			// only vertical match.
+			ScoreManager.Instance.AddScore((vertMatch - 1) * 75);
+		}
+	}
+	#endregion
+
+	#region Grid Update
 	void UpdateColumn(int column) {
 		int isNull = 0;
 		int notNull = 0;
@@ -293,19 +315,105 @@ public class GridBoard : MonoBehaviour {
 			UpdateColumn(x);
 		}
 	}
+	#endregion
 
-	void GiveMatchPoints(int horiMatch, int vertMatch) {
-		if ((horiMatch > 1) && (vertMatch > 1)) {
-			// cross.
-			ScoreManager.Instance.AddScore((horiMatch + vertMatch - 3) * 225);
+	#region  Deadlock Check
+	bool CheckDeadlockGrid() {
+		for (int x = 0; x < _gridSize.x; x++) {
+			for (int y = 0; y < _gridSize.y; y++) {
+				if (!CheckDeadlockGem(new Vector2Int(x, y))) {
+					return false;
+				}
+			}
 		}
-		else if (horiMatch > 1) {
-			// only horizontal match.
-			ScoreManager.Instance.AddScore((horiMatch - 1) * 75);
-		}
-		else if (vertMatch > 1) {
-			// only vertical match.
-			ScoreManager.Instance.AddScore((vertMatch - 1) * 75);
-		}
+
+		Debug.Log("deadlock!!!");
+		return true;
 	}
+
+	// Obs: this method on his own do not indicate if the argument gem is a deadlock gem.
+	bool CheckDeadlockGem(Vector2Int gem) {
+		// Check double on top.
+		if (gem.y + 1 < _gridSize.y) {
+			if (_grid[gem.x, gem.y].Id == _grid[gem.x, gem.y + 1].Id) {
+				// Verify double's extremities.
+				if (gem.y - 1 >= 0) {
+					if (gem.y - 2 >= 0)
+						if (_grid[gem.x, gem.y].Id == _grid[gem.x, gem.y - 2].Id)
+							return false;
+					if (gem.x + 1 < _gridSize.x)
+						if (_grid[gem.x, gem.y].Id == _grid[gem.x + 1, gem.y - 1].Id)
+							return false;
+					if (gem.x - 1 >= 0)
+						if (_grid[gem.x, gem.y].Id == _grid[gem.x - 1, gem.y - 1].Id)
+							return false;
+				}
+				if (gem.y + 2 < _gridSize.y) {
+					if (gem.y + 3 < _gridSize.y)
+						if (_grid[gem.x, gem.y].Id == _grid[gem.x, gem.y + 3].Id)
+							return false;
+					if (gem.x + 1 < _gridSize.x)
+						if (_grid[gem.x, gem.y].Id == _grid[gem.x + 1, gem.y + 2].Id)
+							return false;
+					if (gem.x - 1 >= 0)
+						if (_grid[gem.x, gem.y].Id == _grid[gem.x - 1, gem.y + 2].Id)
+							return false;
+				}
+			}
+		}
+		// Check double to the right.
+		if (gem.x + 1 < _gridSize.x) {
+			if (_grid[gem.x, gem.y].Id == _grid[gem.x + 1, gem.y].Id) {
+				// Verify double's extremities.
+				if (gem.x - 1 >= 0) {
+					if (gem.x - 2 >= 0)
+						if (_grid[gem.x, gem.y].Id == _grid[gem.x - 2, gem.y].Id)
+							return false;
+					if (gem.y + 1 < _gridSize.y)
+						if (_grid[gem.x, gem.y].Id == _grid[gem.x - 1, gem.y + 1].Id)
+							return false;
+					if (gem.y - 1 >= 0)
+						if (_grid[gem.x, gem.y].Id == _grid[gem.x - 1, gem.y - 1].Id)
+							return false;
+				}
+				if (gem.x + 2 < _gridSize.x) {
+					if (gem.x + 3 < _gridSize.x)
+						if (_grid[gem.x, gem.y].Id == _grid[gem.x + 3, gem.y].Id)
+							return false;
+					if (gem.y + 1 < _gridSize.y)
+						if (_grid[gem.x, gem.y].Id == _grid[gem.x + 2, gem.y + 1].Id)
+							return false;
+					if (gem.y - 1 >= 0)
+						if (_grid[gem.x, gem.y].Id == _grid[gem.x + 2, gem.y - 1].Id)
+							return false;
+				}
+			}
+		}
+
+		// Check open middle vertical.
+		if ((gem.y + 1 < _gridSize.y) && (gem.y - 1 >= 0))
+			if (_grid[gem.x, gem.y + 1].Id == _grid[gem.x, gem.y - 1].Id) {
+				// Verify opening's neighbors.
+				if (gem.x + 1 < _gridSize.x)
+					if (_grid[gem.x, gem.y + 1].Id == _grid[gem.x + 1, gem.y].Id)
+						return false;
+				if (gem.x - 1 >= 0)
+					if (_grid[gem.x, gem.y + 1].Id == _grid[gem.x - 1, gem.y].Id)
+						return false;
+			}
+		// Check open middle horizontal.
+		if ((gem.x + 1 < _gridSize.x) && (gem.x - 1 >= 0))
+			if (_grid[gem.x + 1, gem.y].Id == _grid[gem.x - 1, gem.y].Id) {
+				// Verify opening's neightbors.
+				if (gem.y + 1 < _gridSize.y)
+					if (_grid[gem.x + 1, gem.y].Id == _grid[gem.x, gem.y + 1].Id)
+						return false;
+				if (gem.y - 1 >= 0)
+					if (_grid[gem.x + 1, gem.y].Id == _grid[gem.x, gem.y - 1].Id)
+						return false;
+			}
+
+		return true;
+	}
+	#endregion
 }
