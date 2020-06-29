@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Game/MainMenu.unity
     guid: bd4990d57418fe442bd92b508a7b2acc
   - enabled: 1
+    path: Assets/Scenes/Game/RoundUI.unity
+    guid: a074a1b8d185e7740bc2d14b3cdf3859
+  - enabled: 1
     path: Assets/Scenes/WIP/Grid.unity
     guid: 58d45a21e95fdea41b0bebc9f23368a1
   m_configObjects:

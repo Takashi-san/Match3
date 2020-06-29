@@ -24,6 +24,8 @@ public class RoundManager : MonoBehaviour {
 		timer.timerEnd += RoundEnd;
 		timer.SetTimer(_roundTime);
 		timer.StartTimer();
+
+		FindObjectOfType<SceneHandler>().LoadSceneAdditive("RoundUI");
 	}
 
 	void RoundEnd() {

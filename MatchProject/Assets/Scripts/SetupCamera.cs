@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SetupCamera : MonoBehaviour {
+	[SerializeField] [Range(0.01f, 1)] float _heightLimit = 1;
+	[SerializeField] [Range(0.01f, 1)] float _heightMargin = 1;
 	Vector2Int _gridSize;
 
 	void Awake() {
@@ -22,11 +24,12 @@ public class SetupCamera : MonoBehaviour {
 		camSize.y = ((float)_gridSize.x + 1) / aspectRatio;
 		Camera.main.orthographicSize = camSize.y / 2;
 		//}
-		if (camSize.y < _gridSize.y) {
-			Camera.main.orthographicSize = (float)_gridSize.y / 2;
+		if (camSize.y * _heightLimit < _gridSize.y) {
+			Camera.main.orthographicSize = ((float)_gridSize.y / 2) / _heightLimit;
 		}
 
 		// Put camera on board center.
-		Camera.main.transform.position = new Vector3(((float)_gridSize.x - 1) / 2, ((float)_gridSize.y - 1) / 2, -10);
+		//Camera.main.transform.position = new Vector3(((float)_gridSize.x - 1) / 2, ((float)_gridSize.y - 1) / 2, -10);
+		Camera.main.transform.position = new Vector3(((float)_gridSize.x - 1) / 2, Camera.main.orthographicSize - 0.5f - (1 - _heightLimit) * _heightMargin * Camera.main.orthographicSize * 2, -10);
 	}
 }

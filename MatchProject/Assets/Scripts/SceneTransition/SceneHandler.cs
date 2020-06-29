@@ -82,13 +82,15 @@ public class SceneHandler : MonoBehaviour {
 		yield break;
 	}
 
+	public void LoadSceneAdditive(string scene) {
+		SceneManager.LoadScene(scene, LoadSceneMode.Additive);
+	}
+
 	public void QuitGame() {
 #if UNITY_EDITOR
 		UnityEditor.EditorApplication.isPlaying = false;
-#elif UNITY_WEBPLAYER
-         //Application.OpenURL("google.com");
 #else
-         Application.Quit();
+        Application.Quit();
 #endif
 	}
 
