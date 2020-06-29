@@ -879,6 +879,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1839624943}
   - component: {fileID: 1839624944}
+  - component: {fileID: 1839624945}
   m_Layer: 0
   m_Name: Timer
   m_TagString: Untagged
@@ -912,7 +913,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d977d9ee51ed0ed4c9d22c034499e31d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _StartTime: 120
+--- !u!114 &1839624945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839624942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b43b29398956eca4f97feeb0ff1429c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _goalScore: 5000
+  _roundTime: 30
 --- !u!1 &2064648547
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,7 +937,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2064648550}
   - component: {fileID: 2064648548}
-  - component: {fileID: 2064648551}
   m_Layer: 0
   m_Name: Player Input
   m_TagString: Untagged
@@ -959,19 +972,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2064648551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2064648547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a620eda855f2ed5499c0eda1b4bf720b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 0000000000000000000000000000000000000000000000000000000000000000
 --- !u!1 &2115993267
 GameObject:
   m_ObjectHideFlags: 0

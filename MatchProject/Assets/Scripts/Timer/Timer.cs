@@ -2,17 +2,11 @@
 using System;
 
 public class Timer : MonoBehaviour {
-	[SerializeField] [Min(0)] float _StartTime = 0;
-
 	public Action<float> timerUpdate;
 	public Action timerEnd;
 
 	float _timer = 0;
 	bool _active = false;
-
-	void Awake() {
-		_timer = _StartTime;
-	}
 
 	void Start() {
 		if (timerUpdate != null) {
@@ -41,5 +35,11 @@ public class Timer : MonoBehaviour {
 
 	public void StopTimer() {
 		_active = false;
+	}
+
+	public void SetTimer(float time) {
+		if (time >= 0) {
+			_timer = time;
+		}
 	}
 }

@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -150,16 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7bd27ed2d4a87845a48d0dfbb2c0f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sizeX: 1
-  _sizeY: 1
-  _gems:
-  - {fileID: 2032365170382298201, guid: ebfa2a0877d396046a5b75b9756859d1, type: 3}
-  - {fileID: 1283858449375562544, guid: 833660234dc42b14d8d47e6a8a4e1a98, type: 3}
-  - {fileID: 1200292679615086732, guid: 26cb727ff3f1b2a4b9a4af5fd0ed0021, type: 3}
-  - {fileID: 1727510750763128568, guid: 8ecbd0cc703f8e3479e40c2ab6031624, type: 3}
-  - {fileID: 5021203716951269655, guid: e6c1b94f3f3e84a48880faef989594c7, type: 3}
-  - {fileID: 4167485141902483870, guid: 1d115cf19f44fe24899b71b797264619, type: 3}
-  - {fileID: 2307097134038861869, guid: 34cb55498860c2e42a583e29f74a9618, type: 3}
+  _gridSize: {x: 1, y: 1}
 --- !u!4 &20758307
 Transform:
   m_ObjectHideFlags: 0
