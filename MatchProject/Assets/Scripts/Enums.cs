@@ -8,6 +8,6 @@ public class Enums : MonoBehaviour {
 	}
 
 	public enum GemId {
-		MILK, APPLE, LEMON, BREAD, BROCOLI, COCONUT, STAR
+		MILK, APPLE, LEMON, BREAD, BROCOLI, COCONUT, STAR, NULL
 	}
 }

@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GridBoard : MonoBehaviour {
 	[SerializeField] [Min(1)] Vector2Int _gridSize = Vector2Int.one;
-	[SerializeField] GameObject[] _gems = null;
 
 	public Vector2Int GridSize => _gridSize;
 
@@ -15,16 +15,56 @@ public class GridBoard : MonoBehaviour {
 	void Start() {
 		_spawner = FindObjectOfType<GemSpawner>();
 		SetupGrid();
+		while (CheckDeadlockGrid()) {
+			ShuffleGrid();
+			while (CheckMatchGrid()) {
+				UpdateGrid();
+			}
+		}
 		PlayerInput.Instance.swipe += CheckMove;
 	}
 
 	// Important thing to take note is that the gem's index on the grid are the same as their position in world space.
 	// This detail is important in multiple places in the code and how the scene is being setup in the game.
 	void SetupGrid() {
+		Enums.GemId gem, doubleX, doubleY;
+		Enums.GemId[] lineup = _spawner.Lineup;
 		_grid = new Gem[_gridSize.x, _gridSize.y];
+
 		for (int x = 0; x < _gridSize.x; x++) {
 			for (int y = 0; y < _gridSize.y; y++) {
-				_grid[x, y] = _spawner.Spawn(_gems[Random.Range(0, _gems.Length)], new Vector2(x, y));
+				if (x - 2 >= 0) {
+					if (_grid[x - 1, y].Id == _grid[x - 2, y].Id) {
+						doubleX = _grid[x - 1, y].Id;
+					}
+					else {
+						doubleX = Enums.GemId.NULL;
+					}
+				}
+				else {
+					doubleX = Enums.GemId.NULL;
+				}
+				if (y - 2 >= 0) {
+					if (_grid[x, y - 1].Id == _grid[x, y - 2].Id) {
+						doubleY = _grid[x, y - 1].Id;
+					}
+					else {
+						doubleY = Enums.GemId.NULL;
+					}
+				}
+				else {
+					doubleY = Enums.GemId.NULL;
+				}
+
+				gem = lineup[UnityEngine.Random.Range(0, lineup.Length)];
+				if (gem == doubleX || gem == doubleY) {
+					Enums.GemId[] tmp = Array.FindAll(lineup, v => (v != doubleX) && (v != doubleY));
+					if (tmp.Length != 0) {
+						gem = tmp[UnityEngine.Random.Range(0, tmp.Length)];
+					}
+				}
+
+				_grid[x, y] = _spawner.Spawn(gem, new Vector2(x, y));
 			}
 		}
 	}
@@ -39,7 +79,7 @@ public class GridBoard : MonoBehaviour {
 
 		for (int x = 0; x < _gridSize.x; x++) {
 			for (int y = 0; y < _gridSize.y; y++) {
-				int rand = Random.Range(0, tmp.Count);
+				int rand = UnityEngine.Random.Range(0, tmp.Count);
 				_grid[x, y] = tmp[rand];
 				tmp[rand].Move(new Vector2(x, y));
 				tmp.RemoveAt(rand);
@@ -334,8 +374,9 @@ public class GridBoard : MonoBehaviour {
 		}
 
 		// Replenish the column.
+		Enums.GemId[] lineup = _spawner.Lineup;
 		for (; isNull < _gridSize.y; isNull++) {
-			_grid[column, isNull] = _spawner.Spawn(_gems[Random.Range(0, _gems.Length)], new Vector2(column, isNull));
+			_grid[column, isNull] = _spawner.Spawn(lineup[UnityEngine.Random.Range(0, lineup.Length)], new Vector2(column, isNull));
 		}
 	}
 
