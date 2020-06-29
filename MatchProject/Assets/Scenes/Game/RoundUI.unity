@@ -448,7 +448,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Score
+  m_text: '0
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c89f0a725e4ede446b8ff81aebc88447, type: 2}
   m_sharedMaterial: {fileID: 7980643997292034795, guid: c89f0a725e4ede446b8ff81aebc88447,
@@ -518,9 +520,9 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 508923900}
-    characterCount: 5
+    characterCount: 2
     spriteCount: 0
-    spaceCount: 0
+    spaceCount: 1
     wordCount: 1
     linkCount: 0
     lineCount: 1
@@ -792,7 +794,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Score
+  m_text: '0
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c89f0a725e4ede446b8ff81aebc88447, type: 2}
   m_sharedMaterial: {fileID: 7980643997292034795, guid: c89f0a725e4ede446b8ff81aebc88447,
@@ -862,9 +866,9 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1044888286}
-    characterCount: 5
+    characterCount: 2
     spriteCount: 0
-    spaceCount: 0
+    spaceCount: 1
     wordCount: 1
     linkCount: 0
     lineCount: 1

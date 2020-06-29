@@ -490,8 +490,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43b29398956eca4f97feeb0ff1429c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _goalScore: 5000
-  _roundTime: 30
+  _roundData: {fileID: 11400000, guid: 7527e7f2e5a41d3448b534d5f2e880bc, type: 2}
 --- !u!114 &1839624946
 MonoBehaviour:
   m_ObjectHideFlags: 0

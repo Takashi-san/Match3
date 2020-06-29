@@ -7,6 +7,8 @@ public class GridBoard : MonoBehaviour {
 	[SerializeField] [Min(1)] Vector2Int _gridSize = Vector2Int.one;
 
 	public Vector2Int GridSize => _gridSize;
+	public Action startMove;
+	public Action endMove;
 
 	Gem[,] _grid;
 	GemSpawner _spawner;
@@ -94,6 +96,9 @@ public class GridBoard : MonoBehaviour {
 			return;
 		}
 		_inMove = true;
+		if (startMove != null) {
+			startMove();
+		}
 
 		// Check if input was on the board.
 		swipePosition += new Vector2(0.5f, 0.5f);
@@ -153,11 +158,22 @@ public class GridBoard : MonoBehaviour {
 		}
 
 		// Check if valid movement.
-		CheckMatchGem(gemA);
-		CheckMatchGem(gemB);
-		UpdateGrid();
-		while (GemMoveManager.Instance.HasMovement) {
-			yield return null;
+		if (CheckMatchGem(gemA) || CheckMatchGem(gemB)) {
+			UpdateGrid();
+			while (GemMoveManager.Instance.HasMovement) {
+				yield return null;
+			}
+		}
+		else {
+			Swap(gemA, gemB);
+			while (GemMoveManager.Instance.HasMovement) {
+				yield return null;
+			}
+			_inMove = false;
+			if (endMove != null) {
+				endMove();
+			}
+			yield break;
 		}
 
 		// Successfull movement.
@@ -183,6 +199,9 @@ public class GridBoard : MonoBehaviour {
 
 		// Finish player move.
 		_inMove = false;
+		if (endMove != null) {
+			endMove();
+		}
 	}
 
 	void Swap(Vector2Int gemA, Vector2Int gemB) {

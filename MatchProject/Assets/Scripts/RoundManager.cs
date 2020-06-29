@@ -4,12 +4,14 @@ using UnityEngine;
 using System;
 
 public class RoundManager : MonoBehaviour {
-	[SerializeField] [Min(0)] float _goalScore = 0;
-	[SerializeField] [Min(0)] float _roundTime = 0;
+	[SerializeField] RoundData _roundData = null;
 
 	static RoundManager _instance;
 	public RoundManager Instance => _instance;
+	public Action roundStart;
 	public Action roundEnd;
+
+	SceneHandler _sceneHandler;
 
 	void Awake() {
 		if (_instance == null) {
@@ -22,20 +24,23 @@ public class RoundManager : MonoBehaviour {
 
 		Timer timer = FindObjectOfType<Timer>();
 		timer.timerEnd += RoundEnd;
-		timer.SetTimer(_roundTime);
+		timer.SetTimer(_roundData.roundTime);
 		timer.StartTimer();
 
-		FindObjectOfType<SceneHandler>().LoadSceneAdditive("RoundUI");
+		_sceneHandler = FindObjectOfType<SceneHandler>();
+		_sceneHandler.LoadSceneAdditive("RoundUI");
 	}
 
 	void RoundEnd() {
 		if (roundEnd != null)
 			roundEnd();
-		if (FindObjectOfType<ScoreManager>().Score >= _goalScore) {
-			Debug.Log("Win!");
+		if (FindObjectOfType<ScoreManager>().Score >= _roundData.goalScore) {
+			_roundData.round++;
+			_roundData.goalScore += 500;
+			_sceneHandler.LoadScene("Grid");
 		}
 		else {
-			Debug.Log("Lose!");
+			_sceneHandler.LoadScene("Grid");
 		}
 	}
 }

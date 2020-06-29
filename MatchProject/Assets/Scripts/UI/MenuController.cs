@@ -1,15 +1,27 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class MenuController : MonoBehaviour {
-	[SerializeField] GameObject _menu = null;
+	[SerializeField] Canvas _menu = null;
 
 	void Start() {
 		if (!_menu) {
 			Debug.LogWarning("No Menu specified to control");
 		}
 		else {
-			_menu.SetActive(false);
+			_menu.enabled = false;
+		}
+	}
+
+	void Update() {
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			if (_menu.enabled) {
+				Deactivate();
+			}
+			else {
+				Activate();
+			}
 		}
 	}
 
@@ -18,12 +30,12 @@ public class MenuController : MonoBehaviour {
 	}
 
 	public void Activate() {
-		_menu.SetActive(true);
+		_menu.enabled = true;
 		Time.timeScale = 0;
 	}
 
 	public void Deactivate() {
-		_menu.SetActive(false);
+		_menu.enabled = false;
 		Time.timeScale = 1;
 	}
 }
