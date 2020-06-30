@@ -1,10 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using System;
 
 public class GridBoard : MonoBehaviour {
 	[SerializeField] [Min(1)] Vector2Int _gridSize = Vector2Int.one;
+	[SerializeField] AudioClip _swapSfx = null;
+	[SerializeField] AudioClip _matchSfx = null;
+	[SerializeField] [Min(0)] float _matchPitchInc = 0;
+	[SerializeField] [Min(0)] float _matchPitchMax = 1;
+	[SerializeField] AudioMixer _mixer = null;
+	[SerializeField] AudioSource _matchSource = null;
+	[SerializeField] AudioSource _sfxSource = null;
+
 
 	public Vector2Int GridSize => _gridSize;
 	public Action startMove;
@@ -14,6 +23,7 @@ public class GridBoard : MonoBehaviour {
 	GemSpawner _spawner;
 	bool _inMove = false;
 	bool _canMove = false;
+	float _pitch = 1;
 
 	void Start() {
 		_spawner = FindObjectOfType<GemSpawner>();
@@ -108,6 +118,7 @@ public class GridBoard : MonoBehaviour {
 		if (startMove != null) {
 			startMove();
 		}
+		_pitch = 1 - _matchPitchInc;
 
 		// Check if input was on the board.
 		swipePosition += new Vector2(0.5f, 0.5f);
@@ -171,6 +182,7 @@ public class GridBoard : MonoBehaviour {
 		tmp1 = CheckMatchGem(gemA);
 		tmp2 = CheckMatchGem(gemB);
 		if (tmp1 || tmp2) {
+			PlayMatchSfx();
 			UpdateGrid();
 			while (GemMoveManager.Instance.HasMovement) {
 				yield return null;
@@ -190,6 +202,7 @@ public class GridBoard : MonoBehaviour {
 
 		// Successfull movement.
 		while (CheckMatchGrid()) {
+			PlayMatchSfx();
 			UpdateGrid();
 			while (GemMoveManager.Instance.HasMovement) {
 				yield return null;
@@ -202,6 +215,7 @@ public class GridBoard : MonoBehaviour {
 				yield return null;
 			}
 			while (CheckMatchGrid()) {
+				PlayMatchSfx();
 				UpdateGrid();
 				while (GemMoveManager.Instance.HasMovement) {
 					yield return null;
@@ -226,6 +240,8 @@ public class GridBoard : MonoBehaviour {
 		// Change index.
 		_grid[gemB.x, gemB.y] = _grid[gemA.x, gemA.y];
 		_grid[gemA.x, gemA.y] = tmp;
+
+		_sfxSource.PlayOneShot(_swapSfx);
 	}
 	#endregion
 
@@ -365,6 +381,15 @@ public class GridBoard : MonoBehaviour {
 			// only vertical match.
 			ScoreManager.Instance.AddScore((vertMatch - 1) * 75);
 		}
+	}
+
+	void PlayMatchSfx() {
+		_matchSource.PlayOneShot(_matchSfx);
+		_pitch += _matchPitchInc;
+		if (_pitch > _matchPitchMax) {
+			_pitch = _matchPitchMax;
+		}
+		_mixer.SetFloat("MatchPitch", _pitch);
 	}
 	#endregion
 
