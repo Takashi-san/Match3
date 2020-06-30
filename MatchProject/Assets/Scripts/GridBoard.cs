@@ -158,7 +158,10 @@ public class GridBoard : MonoBehaviour {
 		}
 
 		// Check if valid movement.
-		if (CheckMatchGem(gemA) || CheckMatchGem(gemB)) {
+		bool tmp1, tmp2;
+		tmp1 = CheckMatchGem(gemA);
+		tmp2 = CheckMatchGem(gemB);
+		if (tmp1 || tmp2) {
 			UpdateGrid();
 			while (GemMoveManager.Instance.HasMovement) {
 				yield return null;

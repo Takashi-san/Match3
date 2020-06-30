@@ -12,6 +12,8 @@ public class RoundManager : MonoBehaviour {
 	public Action roundEnd;
 
 	SceneHandler _sceneHandler;
+	int _score;
+	bool _boardResolving = false;
 
 	void Awake() {
 		if (_instance == null) {
@@ -29,12 +31,25 @@ public class RoundManager : MonoBehaviour {
 
 		_sceneHandler = FindObjectOfType<SceneHandler>();
 		_sceneHandler.LoadSceneAdditive("RoundUI");
+
+		FindObjectOfType<GridBoard>().startMove += BoardResolving;
+		FindObjectOfType<GridBoard>().endMove += BoardStill;
+
+		FindObjectOfType<ScoreManager>().scoreUpdate += ScoreUpdate;
 	}
 
 	void RoundEnd() {
 		if (roundEnd != null)
 			roundEnd();
-		if (FindObjectOfType<ScoreManager>().Score >= _roundData.goalScore) {
+		StartCoroutine(AvaliateRound());
+	}
+
+	IEnumerator AvaliateRound() {
+		while (_boardResolving) {
+			yield return null;
+		}
+
+		if (_score >= _roundData.goalScore) {
 			_roundData.round++;
 			_roundData.goalScore += 500;
 			_sceneHandler.LoadScene("Grid");
@@ -42,5 +57,17 @@ public class RoundManager : MonoBehaviour {
 		else {
 			_sceneHandler.LoadScene("Grid");
 		}
+	}
+
+	void BoardResolving() {
+		_boardResolving = true;
+	}
+
+	void BoardStill() {
+		_boardResolving = false;
+	}
+
+	void ScoreUpdate(int score) {
+		_score = score;
 	}
 }
