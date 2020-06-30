@@ -423,8 +423,6 @@ public class GridBoard : MonoBehaviour {
 		// Clear matches.
 		foreach (KeyValuePair<Vector2Int, int[]> kvp in _matches.OrderByDescending(i => i.Value.Sum())) {
 			if (_grid[kvp.Key.x, kvp.Key.y] != null) {
-				Debug.Log(kvp.Value.Sum());
-
 				// Verify if all gems in the match exist.
 				bool isNull = false;
 				if (kvp.Value[0] + kvp.Value[1] > 0) {

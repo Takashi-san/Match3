@@ -17,9 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game/InfiniteRound.unity
     guid: 60c4c102e12374743a17408a978318e1
-  - enabled: 1
-    path: Assets/Scenes/WIP/Grid.unity
-    guid: 58d45a21e95fdea41b0bebc9f23368a1
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 0190e3daa8be1714b93d3004eaa04f08,
       type: 2}
