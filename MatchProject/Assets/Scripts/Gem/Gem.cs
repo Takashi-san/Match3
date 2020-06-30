@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gem : MonoBehaviour {
+public class Gem : MonoBehaviour, IPooledGameObject {
 	[SerializeField] Enums.GemId _id = Enums.GemId.MILK;
 	[SerializeField] [Min(0.001f)] float _moveDuration = 0.001f;
 	public Enums.GemId Id => _id;
@@ -10,6 +10,19 @@ public class Gem : MonoBehaviour {
 	bool _doMove = false;
 	Vector2 _startPosition;
 	Vector2 _endPosition;
+
+	GameObjectPool _pool = null;
+	public GameObjectPool Pool {
+		get { return _pool; }
+		set {
+			if (_pool == null) {
+				_pool = value;
+			}
+			else {
+				Debug.LogWarning("Trying to change setted pool element pool.");
+			}
+		}
+	}
 
 	void Update() {
 		if (_doMove) {

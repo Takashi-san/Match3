@@ -7,6 +7,7 @@ using System.Linq;
 public class GemSpawner : MonoBehaviour {
 	[SerializeField] GemLineup _lineup = null;
 	Dictionary<Enums.GemId, GameObject> _gems = new Dictionary<Enums.GemId, GameObject>();
+	Dictionary<Enums.GemId, GameObjectPool> _pools = new Dictionary<Enums.GemId, GameObjectPool>();
 	float _spawnHeight;
 
 	public Enums.GemId[] Lineup => _gems.Keys.ToArray();
@@ -22,7 +23,9 @@ public class GemSpawner : MonoBehaviour {
 	}
 
 	public Gem Spawn(Enums.GemId gem, Vector2 position) {
-		Gem spawned = Instantiate(_gems[gem], new Vector2(position.x, _spawnHeight), Quaternion.identity).GetComponent<Gem>();
+		Gem spawned = _pools[gem].Get().GetComponent<Gem>();
+		spawned.transform.position = new Vector2(position.x, _spawnHeight);
+		spawned.gameObject.SetActive(true);
 		spawned.Move(position);
 		return spawned;
 	}
@@ -30,6 +33,11 @@ public class GemSpawner : MonoBehaviour {
 	void Setup() {
 		for (int i = 0; i < _lineup.gems.Length; i++) {
 			_gems.Add(_lineup.gems[i].GetComponent<Gem>().Id, _lineup.gems[i]);
+		}
+		foreach (KeyValuePair<Enums.GemId, GameObject> kvp in _gems) {
+			GameObjectPool pool = gameObject.AddComponent<GameObjectPool>();
+			pool.Prefab = kvp.Value;
+			_pools.Add(kvp.Key, pool);
 		}
 	}
 }

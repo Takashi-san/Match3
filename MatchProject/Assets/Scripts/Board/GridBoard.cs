@@ -318,12 +318,12 @@ public class GridBoard : MonoBehaviour {
 			if (hasHoriMatch) {
 				for (int i = gem.x + 1; i <= gem.x + matchHoriPos; i++) {
 					// Clear gem.
-					Destroy(_grid[i, gem.y].gameObject);
+					_grid[i, gem.y].Pool.ReturnToPool(_grid[i, gem.y].gameObject);
 					_grid[i, gem.y] = null;
 				}
 				for (int i = gem.x - 1; i >= gem.x - matchHoriNeg; i--) {
 					// Clear gem.
-					Destroy(_grid[i, gem.y].gameObject);
+					_grid[i, gem.y].Pool.ReturnToPool(_grid[i, gem.y].gameObject);
 					_grid[i, gem.y] = null;
 				}
 			}
@@ -331,18 +331,18 @@ public class GridBoard : MonoBehaviour {
 			if (hasVertMatch) {
 				for (int i = gem.y + 1; i <= gem.y + matchVertPos; i++) {
 					// Clear gem.
-					Destroy(_grid[gem.x, i].gameObject);
+					_grid[gem.x, i].Pool.ReturnToPool(_grid[gem.x, i].gameObject);
 					_grid[gem.x, i] = null;
 				}
 				for (int i = gem.y - 1; i >= gem.y - matchVertNeg; i--) {
 					// Clear gem.
-					Destroy(_grid[gem.x, i].gameObject);
+					_grid[gem.x, i].Pool.ReturnToPool(_grid[gem.x, i].gameObject);
 					_grid[gem.x, i] = null;
 				}
 			}
 
 			// Clear target gem.
-			Destroy(_grid[gem.x, gem.y].gameObject);
+			_grid[gem.x, gem.y].Pool.ReturnToPool(_grid[gem.x, gem.y].gameObject);
 			_grid[gem.x, gem.y] = null;
 
 			GiveMatchPoints(matchHoriNeg + matchHoriPos, matchVertNeg + matchVertPos);
