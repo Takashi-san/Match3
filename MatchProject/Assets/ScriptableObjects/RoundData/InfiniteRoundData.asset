@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 249874607c3842740be825e99f62af61, type: 3}
   m_Name: InfiniteRoundData
   m_EditorClassIdentifier: 
-  round: 5
-  goalScore: 2500
-  roundTime: 30
+  round: 1
+  goalScore: 500
+  roundTime: 120
+  roundScaleAdd: 250
+  roundScaleMult: 1.2

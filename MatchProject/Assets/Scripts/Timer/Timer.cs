@@ -40,6 +40,8 @@ public class Timer : MonoBehaviour {
 	public void SetTimer(float time) {
 		if (time >= 0) {
 			_timer = time;
+			if (timerUpdate != null)
+				timerUpdate(_timer);
 		}
 	}
 }

@@ -13,6 +13,7 @@ public class GridBoard : MonoBehaviour {
 	Gem[,] _grid;
 	GemSpawner _spawner;
 	bool _inMove = false;
+	bool _canMove = false;
 
 	void Start() {
 		_spawner = FindObjectOfType<GemSpawner>();
@@ -24,6 +25,11 @@ public class GridBoard : MonoBehaviour {
 			}
 		}
 		PlayerInput.Instance.swipe += CheckMove;
+		FindObjectOfType<RoundManager>().roundStart += RoundStart;
+	}
+
+	void RoundStart() {
+		_canMove = true;
 	}
 
 	// Important thing to take note is that the gem's index on the grid are the same as their position in world space.
@@ -91,6 +97,9 @@ public class GridBoard : MonoBehaviour {
 
 	#region Player Move
 	void CheckMove(Vector2 swipePosition, Enums.Direction direction) {
+		if (!_canMove)
+			return;
+
 		// Check if it is already in the middle of another player move.
 		if (_inMove) {
 			return;

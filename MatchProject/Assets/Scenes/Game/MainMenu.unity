@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -774,7 +774,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: CREDIT
+  m_text: RESET
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c89f0a725e4ede446b8ff81aebc88447, type: 2}
   m_sharedMaterial: {fileID: 7980643997292034795, guid: c89f0a725e4ede446b8ff81aebc88447,
@@ -844,7 +844,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1165110193}
-    characterCount: 6
+    characterCount: 5
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
@@ -1209,9 +1209,10 @@ GameObject:
   - component: {fileID: 1843841994}
   - component: {fileID: 1843841997}
   - component: {fileID: 1843841996}
+  - component: {fileID: 1843841998}
   - component: {fileID: 1843841995}
   m_Layer: 5
-  m_Name: Credit Button
+  m_Name: Reset Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1280,7 +1281,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1843841996}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1843841998}
+        m_MethodName: SetRoundData
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1843841996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1318,6 +1330,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1843841993}
   m_CullTransparentMesh: 0
+--- !u!114 &1843841998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1843841993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b697a4377fbc1ef469f00b3c981e149b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _roundData: {fileID: 11400000, guid: 7527e7f2e5a41d3448b534d5f2e880bc, type: 2}
+  _round: 1
+  _goalScore: 500
+  _roundTime: 120
 --- !u!1 &1891594861
 GameObject:
   m_ObjectHideFlags: 0
