@@ -5,7 +5,7 @@ using UnityEngine.Audio;
 using System;
 
 public class GridBoard : MonoBehaviour {
-	[SerializeField] [Min(1)] Vector2Int _gridSize = Vector2Int.one;
+	[SerializeField] [Min(3)] Vector2Int _gridSize = Vector2Int.one;
 	[SerializeField] AudioClip _swapSfx = null;
 	[SerializeField] AudioClip _matchSfx = null;
 	[SerializeField] [Min(0)] float _matchPitchInc = 0;
