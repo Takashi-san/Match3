@@ -227,8 +227,8 @@ MonoBehaviour:
   _gridSize: {x: 6, y: 9}
   _swapSfx: {fileID: 8300000, guid: 3c22ee24d4dc3ac478d2d73534fff4f1, type: 3}
   _matchSfx: {fileID: 8300000, guid: 064680a6e9fc43b499398e51849e60a9, type: 3}
-  _matchPitchInc: 0.05
-  _matchPitchMax: 1.35
+  _matchPitchInc: 0
+  _matchPitchMax: 1
   _mixer: {fileID: 24100000, guid: 7d4425d944778da4d9530a2a8ee58d65, type: 2}
   _matchSource: {fileID: 511151662}
   _sfxSource: {fileID: 511151661}

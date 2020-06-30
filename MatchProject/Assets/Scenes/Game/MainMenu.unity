@@ -326,6 +326,7 @@ GameObject:
   - component: {fileID: 154882683}
   - component: {fileID: 154882686}
   - component: {fileID: 154882685}
+  - component: {fileID: 154882687}
   - component: {fileID: 154882684}
   m_Layer: 5
   m_Name: Play Button
@@ -409,6 +410,18 @@ MonoBehaviour:
           m_StringArgument: Grid
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 154882687}
+        m_MethodName: PlaySfx
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: effe5ccbacd7ab0409bd50fd7a62f8a1,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &154882685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,6 +459,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 154882682}
   m_CullTransparentMesh: 0
+--- !u!114 &154882687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154882682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 528c15462cc97ce48961a08da6d402ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &463376283
 GameObject:
   m_ObjectHideFlags: 0
@@ -1209,6 +1234,7 @@ GameObject:
   - component: {fileID: 1843841994}
   - component: {fileID: 1843841997}
   - component: {fileID: 1843841996}
+  - component: {fileID: 1843841999}
   - component: {fileID: 1843841998}
   - component: {fileID: 1843841995}
   m_Layer: 5
@@ -1293,6 +1319,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1843841999}
+        m_MethodName: PlaySfx
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: effe5ccbacd7ab0409bd50fd7a62f8a1,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1843841996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1346,6 +1384,18 @@ MonoBehaviour:
   _round: 1
   _goalScore: 500
   _roundTime: 120
+--- !u!114 &1843841999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1843841993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 528c15462cc97ce48961a08da6d402ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1891594861
 GameObject:
   m_ObjectHideFlags: 0
@@ -1596,7 +1646,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 640, y: 960}
+  m_SizeDelta: {x: 470, y: 705.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1958643948
 MonoBehaviour:
