@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 239b3e3002683f040823127f3e2f07e7, type: 3}
-  m_Name: MediunGemLineup
+  m_Name: MediumGemLineup
   m_EditorClassIdentifier: 
   gems:
   - {fileID: 2032365170382298201, guid: ebfa2a0877d396046a5b75b9756859d1, type: 3}

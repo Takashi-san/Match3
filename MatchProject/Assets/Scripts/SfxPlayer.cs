@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 public class SfxPlayer : MonoBehaviour {
-	[SerializeField] AudioMixerGroup _sfxMixerGroup;
+	[SerializeField] AudioMixerGroup _sfxMixerGroup = null;
 
 	AudioSource _audioSource;
 	SfxPlayer _instance;

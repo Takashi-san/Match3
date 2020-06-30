@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using System;
+using System.Linq;
 
 public class GridBoard : MonoBehaviour {
 	[SerializeField] [Min(3)] Vector2Int _gridSize = Vector2Int.one;
@@ -14,7 +15,6 @@ public class GridBoard : MonoBehaviour {
 	[SerializeField] AudioSource _matchSource = null;
 	[SerializeField] AudioSource _sfxSource = null;
 
-
 	public Vector2Int GridSize => _gridSize;
 	public Action startMove;
 	public Action endMove;
@@ -24,6 +24,7 @@ public class GridBoard : MonoBehaviour {
 	bool _inMove = false;
 	bool _canMove = false;
 	float _pitch = 1;
+	Dictionary<Vector2Int, int[]> _matches = new Dictionary<Vector2Int, int[]>();
 
 	void Start() {
 		_spawner = FindObjectOfType<GemSpawner>();
@@ -313,39 +314,21 @@ public class GridBoard : MonoBehaviour {
 			hasVertMatch = true;
 		}
 
-		// Resolve matches.
+		// Verify check results.
 		if (hasHoriMatch || hasVertMatch) {
-			if (hasHoriMatch) {
-				for (int i = gem.x + 1; i <= gem.x + matchHoriPos; i++) {
-					// Clear gem.
-					_grid[i, gem.y].Pool.ReturnToPool(_grid[i, gem.y].gameObject);
-					_grid[i, gem.y] = null;
-				}
-				for (int i = gem.x - 1; i >= gem.x - matchHoriNeg; i--) {
-					// Clear gem.
-					_grid[i, gem.y].Pool.ReturnToPool(_grid[i, gem.y].gameObject);
-					_grid[i, gem.y] = null;
-				}
+			// Store the match data.
+			if (hasHoriMatch && hasVertMatch) {
+				int[] dir = { matchHoriPos, matchHoriNeg, matchVertPos, matchVertNeg };
+				_matches.Add(gem, dir);
 			}
-
-			if (hasVertMatch) {
-				for (int i = gem.y + 1; i <= gem.y + matchVertPos; i++) {
-					// Clear gem.
-					_grid[gem.x, i].Pool.ReturnToPool(_grid[gem.x, i].gameObject);
-					_grid[gem.x, i] = null;
-				}
-				for (int i = gem.y - 1; i >= gem.y - matchVertNeg; i--) {
-					// Clear gem.
-					_grid[gem.x, i].Pool.ReturnToPool(_grid[gem.x, i].gameObject);
-					_grid[gem.x, i] = null;
-				}
+			else if (hasHoriMatch) {
+				int[] dir = { matchHoriPos, matchHoriNeg, 0, 0 };
+				_matches.Add(gem, dir);
 			}
-
-			// Clear target gem.
-			_grid[gem.x, gem.y].Pool.ReturnToPool(_grid[gem.x, gem.y].gameObject);
-			_grid[gem.x, gem.y] = null;
-
-			GiveMatchPoints(matchHoriNeg + matchHoriPos, matchVertNeg + matchVertPos);
+			else if (hasVertMatch) {
+				int[] dir = { 0, 0, matchVertPos, matchVertNeg };
+				_matches.Add(gem, dir);
+			}
 
 			return true;
 		}
@@ -437,6 +420,72 @@ public class GridBoard : MonoBehaviour {
 	}
 
 	void UpdateGrid() {
+		// Clear matches.
+		foreach (KeyValuePair<Vector2Int, int[]> kvp in _matches.OrderByDescending(i => i.Value.Sum())) {
+			if (_grid[kvp.Key.x, kvp.Key.y] != null) {
+				Debug.Log(kvp.Value.Sum());
+
+				// Verify if all gems in the match exist.
+				bool isNull = false;
+				if (kvp.Value[0] + kvp.Value[1] > 0) {
+					for (int i = kvp.Key.x + 1; i <= kvp.Key.x + kvp.Value[0]; i++) {
+						if (_grid[i, kvp.Key.y] == null)
+							isNull = true;
+					}
+					if (isNull)
+						continue;
+					for (int i = kvp.Key.x - 1; i >= kvp.Key.x - kvp.Value[1]; i--) {
+						if (_grid[i, kvp.Key.y] == null)
+							isNull = true;
+					}
+					if (isNull)
+						continue;
+				}
+				if (kvp.Value[2] + kvp.Value[3] > 0) {
+					for (int i = kvp.Key.y + 1; i <= kvp.Key.y + kvp.Value[2]; i++) {
+						if (_grid[kvp.Key.x, i] == null)
+							isNull = true;
+					}
+					if (isNull)
+						continue;
+					for (int i = kvp.Key.y - 1; i >= kvp.Key.y - kvp.Value[3]; i--) {
+						if (_grid[kvp.Key.x, i] == null)
+							isNull = true;
+					}
+					if (isNull)
+						continue;
+				}
+
+				// Remove gems from board.
+				if (kvp.Value[0] + kvp.Value[1] > 0) {
+					for (int i = kvp.Key.x + 1; i <= kvp.Key.x + kvp.Value[0]; i++) {
+						_grid[i, kvp.Key.y].Pool.ReturnToPool(_grid[i, kvp.Key.y].gameObject);
+						_grid[i, kvp.Key.y] = null;
+					}
+					for (int i = kvp.Key.x - 1; i >= kvp.Key.x - kvp.Value[1]; i--) {
+						_grid[i, kvp.Key.y].Pool.ReturnToPool(_grid[i, kvp.Key.y].gameObject);
+						_grid[i, kvp.Key.y] = null;
+					}
+				}
+				if (kvp.Value[2] + kvp.Value[3] > 0) {
+					for (int i = kvp.Key.y + 1; i <= kvp.Key.y + kvp.Value[2]; i++) {
+						_grid[kvp.Key.x, i].Pool.ReturnToPool(_grid[kvp.Key.x, i].gameObject);
+						_grid[kvp.Key.x, i] = null;
+					}
+					for (int i = kvp.Key.y - 1; i >= kvp.Key.y - kvp.Value[3]; i--) {
+						_grid[kvp.Key.x, i].Pool.ReturnToPool(_grid[kvp.Key.x, i].gameObject);
+						_grid[kvp.Key.x, i] = null;
+					}
+				}
+				_grid[kvp.Key.x, kvp.Key.y].Pool.ReturnToPool(_grid[kvp.Key.x, kvp.Key.y].gameObject);
+				_grid[kvp.Key.x, kvp.Key.y] = null;
+
+				GiveMatchPoints(kvp.Value[0] + kvp.Value[1], kvp.Value[2] + kvp.Value[3]);
+			}
+		}
+		_matches.Clear();
+
+		// Move down the gems and replenish the board
 		for (int x = 0; x < _gridSize.x; x++) {
 			UpdateColumn(x);
 		}
