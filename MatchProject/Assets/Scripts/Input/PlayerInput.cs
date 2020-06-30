@@ -7,10 +7,11 @@ public class PlayerInput : MonoBehaviour {
 	public Action<Vector2, Enums.Direction> swipe;
 
 	[SerializeField] [Min(0)] float _swipeDeadzoneRadius = 0;
-	[SerializeField] bool _mouse = false;
 
-	Vector2 _swipePosition;
-	bool _swipeValid = false;
+	Vector2 _swipePositionTouch;
+	bool _swipeValidTouch = false;
+	Vector2 _swipePositionMouse;
+	bool _swipeValidMouse = false;
 
 
 	static PlayerInput _instance;
@@ -27,25 +28,21 @@ public class PlayerInput : MonoBehaviour {
 	}
 
 	void Update() {
-		if (_mouse) {
-			CheckSwipeMouse();
-		}
-		else {
-			if (Input.touchCount > 0) {
-				CheckSwipe();
-			}
+		CheckSwipeMouse();
+		if (Input.touchCount > 0) {
+			CheckSwipeTouch();
 		}
 	}
 
-	void CheckSwipe() {
+	void CheckSwipeTouch() {
 		Touch touch = Input.GetTouch(0);
 		if (touch.phase == TouchPhase.Began) {
-			_swipePosition = Camera.main.ScreenToWorldPoint(touch.position);
-			_swipeValid = true;
+			_swipePositionTouch = Camera.main.ScreenToWorldPoint(touch.position);
+			_swipeValidTouch = true;
 		}
-		else if (_swipeValid && ((touch.phase == TouchPhase.Ended) || (touch.phase == TouchPhase.Canceled))) {
+		else if (_swipeValidTouch && ((touch.phase == TouchPhase.Ended) || (touch.phase == TouchPhase.Canceled))) {
 			Vector2 endPosition = Camera.main.ScreenToWorldPoint(touch.position);
-			endPosition = endPosition - _swipePosition;
+			endPosition = endPosition - _swipePositionTouch;
 
 			if (endPosition.magnitude >= _swipeDeadzoneRadius) {
 				float angle = Mathf.Atan2(endPosition.y, endPosition.x);
@@ -53,38 +50,38 @@ public class PlayerInput : MonoBehaviour {
 
 				if (angle <= 45 && angle > -45) {
 					if (swipe != null) {
-						swipe(_swipePosition, Enums.Direction.Right);
+						swipe(_swipePositionTouch, Enums.Direction.Right);
 					}
 				}
 				else if (angle <= 135 && angle > 45) {
 					if (swipe != null) {
-						swipe(_swipePosition, Enums.Direction.Up);
+						swipe(_swipePositionTouch, Enums.Direction.Up);
 					}
 				}
 				else if (angle <= -135 || angle > 135) {
 					if (swipe != null) {
-						swipe(_swipePosition, Enums.Direction.Left);
+						swipe(_swipePositionTouch, Enums.Direction.Left);
 					}
 				}
 				else if (angle <= -45 && angle > -135) {
 					if (swipe != null) {
-						swipe(_swipePosition, Enums.Direction.Down);
+						swipe(_swipePositionTouch, Enums.Direction.Down);
 					}
 				}
 			}
 
-			_swipeValid = false;
+			_swipeValidTouch = false;
 		}
 	}
 
 	void CheckSwipeMouse() {
 		if (Input.GetMouseButtonDown(0)) {
-			_swipePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			_swipeValid = true;
+			_swipePositionMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			_swipeValidMouse = true;
 		}
-		else if (_swipeValid && Input.GetMouseButtonUp(0)) {
+		else if (_swipeValidMouse && Input.GetMouseButtonUp(0)) {
 			Vector2 endPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			endPosition = endPosition - _swipePosition;
+			endPosition = endPosition - _swipePositionMouse;
 
 			if (endPosition.magnitude >= _swipeDeadzoneRadius) {
 				float angle = Mathf.Atan2(endPosition.y, endPosition.x);
@@ -92,27 +89,27 @@ public class PlayerInput : MonoBehaviour {
 
 				if (angle <= 45 && angle > -45) {
 					if (swipe != null) {
-						swipe(_swipePosition, Enums.Direction.Right);
+						swipe(_swipePositionMouse, Enums.Direction.Right);
 					}
 				}
 				else if (angle <= 135 && angle > 45) {
 					if (swipe != null) {
-						swipe(_swipePosition, Enums.Direction.Up);
+						swipe(_swipePositionMouse, Enums.Direction.Up);
 					}
 				}
 				else if (angle <= -135 || angle > 135) {
 					if (swipe != null) {
-						swipe(_swipePosition, Enums.Direction.Left);
+						swipe(_swipePositionMouse, Enums.Direction.Left);
 					}
 				}
 				else if (angle <= -45 && angle > -135) {
 					if (swipe != null) {
-						swipe(_swipePosition, Enums.Direction.Down);
+						swipe(_swipePositionMouse, Enums.Direction.Down);
 					}
 				}
 			}
 
-			_swipeValid = false;
+			_swipeValidMouse = false;
 		}
 	}
 }
